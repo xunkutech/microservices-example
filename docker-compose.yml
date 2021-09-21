@@ -1,0 +1,76 @@
+version: '3.8'
+services:
+  eureka:
+    image: xunkutech/demo-discovery-server:latest
+    container_name: demo-discovery-server
+    hostname: demo-discovery-server
+    environment:
+      - "TZ=Asia/Shanghai"
+    restart: always
+    networks:
+      - "backend"
+    ports:
+      - "9001:9001"
+  config:
+    image: xunkutech/config-server:latest
+    container_name: config-server
+    hostname: config-server
+    environment:
+      - "TZ=Asia/Shanghai"
+      - "EUREKA_HOSTNAME=demo-discovery-server"
+      - "EUREKA_PORT=9001"
+    restart: on-failure
+    networks:
+      - "backend"
+    ports:
+      - "8888:8888"
+    links: 
+      - eureka
+  book:
+    image: xunkutech/book-service:latest
+    container_name: book-service
+    hostname: book-service
+    environment:
+      - "TZ=Asia/Shanghai"
+      - "EUREKA_HOSTNAME=demo-discovery-server"
+      - "EUREKA_PORT=9001"
+    restart: on-failure
+    networks:
+      - "backend"
+    ports:
+      - "9901:9901"
+    links: 
+      - eureka
+  library:
+    image: xunkutech/library-service:latest
+    container_name: library-service
+    hostname: library-service
+    environment:
+      - "TZ=Asia/Shanghai"
+      - "EUREKA_HOSTNAME=demo-discovery-server"
+      - "EUREKA_PORT=9001"
+    restart: on-failure
+    networks:
+      - "backend"
+    ports:
+      - "9902:9902"
+    links: 
+      - eureka
+  read:
+    image: xunkutech/read-service:latest
+    container_name: read-service
+    hostname: read-service
+    environment:
+      - "TZ=Asia/Shanghai"
+      - "EUREKA_HOSTNAME=demo-discovery-server"
+      - "EUREKA_PORT=9001"
+    restart: on-failure
+    networks:
+      - "backend"
+    ports:
+      - "9903:9903"
+    links: 
+      - eureka
+networks:
+  backend:
+    driver: bridge
