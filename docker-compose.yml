@@ -26,6 +26,21 @@ services:
       - "8888:8888"
     links: 
       - eureka
+  zuul:
+    image: xunkutech/zuul-server:latest
+    container_name: zuul-server
+    hostname: zuul-server
+    environment:
+      - "TZ=Asia/Shanghai"
+      - "EUREKA_HOSTNAME=demo-discovery-server"
+      - "EUREKA_PORT=9001"
+    restart: on-failure
+    networks:
+      - "backend"
+    ports:
+      - "9900:9900"
+    links: 
+      - eureka
   book:
     image: xunkutech/book-service:latest
     container_name: book-service
