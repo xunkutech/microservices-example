@@ -5,3 +5,4 @@ eureka:
     registryFetchIntervalSeconds: 1
   instance:
     leaseRenewalIntervalInSeconds: 1
+    preferIpAddress: true
