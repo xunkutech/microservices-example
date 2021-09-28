@@ -28,63 +28,57 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ .Values.springcloud.eureka.name }}
+        - name: {{ .Chart.Name }}-springcloud-eureka
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.springcloud.eureka.imageRepository }}"
+          image: "{{ .Values.springcloud.eureka.image.repository }}:{{ .Values.springcloud.eureka.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: TZ
+              value: "Asia/Shanghai"
+            {{- with .Values.springcloud.eureka.environments }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
           ports:
-            - name: http
+            - name: eureka
               containerPort: {{ .Values.springcloud.eureka.containerPort }}
               protocol: TCP
-          # livenessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: http
-          # readinessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: http
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-        - name: {{ .Values.springcloud.zuul.name }}
+            {{- toYaml .Values.springcloud.eureka.resources | nindent 12 }}
+        - name: {{ .Chart.Name }}-springcloud-zuul
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.springcloud.zuul.imageRepository }}"
+          image: "{{ .Values.springcloud.zuul.image.repository }}:{{ .Values.springcloud.zuul.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: TZ
+              value: "Asia/Shanghai"
+            {{- with .Values.springcloud.zuul.environments }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
           ports:
-            - name: http
+            - name: zuul
               containerPort: {{ .Values.springcloud.zuul.containerPort }}
               protocol: TCP
-          # livenessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: http
-          # readinessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: http
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-        - name: {{ .Values.springcloud.config.name }}
+            {{- toYaml .Values.springcloud.zuul.resources | nindent 12 }}
+        - name: {{ .Chart.Name }}-springcloud-config
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.springcloud.config.imageRepository }}"
+          image: "{{ .Values.springcloud.config.image.repository }}:{{ .Values.springcloud.config.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: TZ
+              value: "Asia/Shanghai"
+            {{- with .Values.springcloud.config.environments }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
           ports:
-            - name: http
+            - name: config
               containerPort: {{ .Values.springcloud.config.containerPort }}
               protocol: TCP
-          # livenessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: http
-          # readinessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: http
           resources:
-            {{- toYaml .Values.resources | nindent 12 }} 
+            {{- toYaml .Values.springcloud.config.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

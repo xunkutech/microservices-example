@@ -1,9 +1,9 @@
-{{- range .Values.microServices }}
+{{- range $name, $value := .Values.microServices}}
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .name | quote }}
+  name: {{ include "sanyi.fullname" $ }}-{{ $name }}
   labels:
     {{- include "sanyi.labels" $ | nindent 4 }}
 spec:
@@ -33,22 +33,20 @@ spec:
         - name: {{ $.Chart.Name }}
           securityContext:
             {{- toYaml $.Values.securityContext | nindent 12 }}
-          image: "{{ .imageRepository }}"
+          image: "{{ .image.repository }}:{{ .image.tag }}"
           imagePullPolicy: {{ $.Values.image.pullPolicy }}
+          env:
+            - name: TZ
+              value: "Asia/Shanghai"
+            {{- with $value.environments }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
           ports:
             - name: http
-              containerPort: {{ .containerPort }}
+              containerPort: {{ $value.containerPort }}
               protocol: TCP
-          # livenessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: http
-          # readinessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: http
           resources:
-            {{- toYaml $.Values.resources | nindent 12 }}
+            {{- toYaml $value.resources | nindent 12 }}
       {{- with $.Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

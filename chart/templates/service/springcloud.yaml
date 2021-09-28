@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "sanyi.fullname" . }}-zuul-server
+  labels:
+    {{- include "sanyi.labels" . | nindent 4 }}
+spec:
+  type: NodePort
+  ports:
+    - port: {{ .Values.springcloud.zuul.servicePort }}
+      targetPort: {{ .Values.springcloud.zuul.containerPort }}
+      protocol: TCP
+      name: zuul
+  selector:
+    {{- include "sanyi.selectorLabels" . | nindent 4 }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "sanyi.fullname" . }}-eureka-server
+  labels:
+    {{- include "sanyi.labels" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - port: {{ .Values.springcloud.eureka.containerPort }}
+      protocol: TCP
+      name: eureka
+  selector:
+    {{- include "sanyi.selectorLabels" . | nindent 4 }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "sanyi.fullname" . }}-config-server
+  labels:
+    {{- include "sanyi.labels" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - port: {{ .Values.springcloud.config.containerPort }}
+      protocol: TCP
+      name: config
+  selector:
+    {{- include "sanyi.selectorLabels" . | nindent 4 }}

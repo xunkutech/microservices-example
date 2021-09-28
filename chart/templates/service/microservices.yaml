@@ -1,17 +1,16 @@
-{{- range .Values.microServices }}
+{{- range $name, $value := .Values.microServices}}
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .name | quote }}
+  name: {{ include "sanyi.fullname" $ }}-{{ $name }}
   labels:
     {{- include "sanyi.labels" $ | nindent 4 }}
 spec:
-  clusterIP: None
   type: ClusterIP
+  clusterIP: None
   ports:
-    - port: 0088
-      targetPort: http
+    - port: {{ $value.containerPort }}
       protocol: TCP
       name: http
   selector:
