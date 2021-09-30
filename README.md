@@ -25,14 +25,14 @@ kubectl get all
 eval $(minikube docker-env)
 docker info
 
-helm lint
-helm template helm-charts
+helm lint ./chart
+helm template ./chart
 helm install --create-namespace --namespace sanyi-erp --debug --dry-run sanyi ./chart
 helm install --create-namespace --namespace sanyi-erp sanyi ./chart
 helm uninstall --namespace sanyi-erp sanyi
 minikube service list
 kubectl get svc -n sanyi-erp
-minikube service -n sanyi-erp  sanyi-zuul-server  
+minikube service -n sanyi-erp sanyi-zuul-server
 helm list -a
 kubectl get pods -n sanyi-erp
 # log zuul
