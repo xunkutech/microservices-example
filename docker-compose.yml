@@ -1,24 +1,28 @@
 version: '3.8'
 services:
   eureka:
-    image: xunkutech/demo-discovery-server:latest
-    container_name: demo-discovery-server
-    hostname: demo-discovery-server
+    image: xunkutech/server-eureka:latest
+    container_name: server-eureka
+    hostname: server-eureka
     environment:
       - "TZ=Asia/Shanghai"
+      - "SERVER_PORT=8761"
+      - "EUREKA_HOSTNAME=server-eureka"
+      - "EUREKA_PORT=8761"
     restart: always
     networks:
       - "backend"
     ports:
-      - "9001:9001"
+      - "8761:8761"
   config:
-    image: xunkutech/config-server:latest
-    container_name: config-server
-    hostname: config-server
+    image: xunkutech/server-config:latest
+    container_name: server-config
+    hostname: server-config
     environment:
       - "TZ=Asia/Shanghai"
-      - "EUREKA_HOSTNAME=demo-discovery-server"
-      - "EUREKA_PORT=9001"
+      - "SERVER_PORT=8888"
+      - "EUREKA_HOSTNAME=server-eureka"
+      - "EUREKA_PORT=8761"
     restart: on-failure
     networks:
       - "backend"
@@ -27,63 +31,67 @@ services:
     links: 
       - eureka
   zuul:
-    image: xunkutech/zuul-server:latest
-    container_name: zuul-server
-    hostname: zuul-server
+    image: xunkutech/server-zuul:latest
+    container_name: server-zuul
+    hostname: server-zuul
     environment:
       - "TZ=Asia/Shanghai"
-      - "EUREKA_HOSTNAME=demo-discovery-server"
-      - "EUREKA_PORT=9001"
+      - "SERVER_PORT=9000"   
+      - "EUREKA_HOSTNAME=server-eureka"
+      - "EUREKA_PORT=8761"
     restart: on-failure
     networks:
       - "backend"
     ports:
-      - "9900:9900"
+      - "9000:9000"
     links: 
       - eureka
   book:
-    image: xunkutech/book-service:latest
-    container_name: book-service
-    hostname: book-service
+    image: xunkutech/service-book:latest
+    container_name: service-book
+    hostname: service-book
     environment:
       - "TZ=Asia/Shanghai"
-      - "EUREKA_HOSTNAME=demo-discovery-server"
-      - "EUREKA_PORT=9001"
+      - "SERVER_PORT=9001"   
+      - "EUREKA_HOSTNAME=server-eureka"
+      - "EUREKA_PORT=8761"
     restart: on-failure
     networks:
       - "backend"
     ports:
-      - "9901:9901"
+      - "9001:9001"
     links: 
       - eureka
   library:
-    image: xunkutech/library-service:latest
-    container_name: library-service
-    hostname: library-service
+    image: xunkutech/service-library:latest
+    container_name: service-library
+    hostname: service-library
     environment:
       - "TZ=Asia/Shanghai"
-      - "EUREKA_HOSTNAME=demo-discovery-server"
-      - "EUREKA_PORT=9001"
+      - "SERVER_PORT=9002"   
+      - "EUREKA_HOSTNAME=server-eureka"
+      - "EUREKA_PORT=8761"
     restart: on-failure
     networks:
       - "backend"
     ports:
-      - "9902:9902"
+      - "9002:9002"
     links: 
       - eureka
   read:
-    image: xunkutech/read-service:latest
-    container_name: read-service
-    hostname: read-service
+    image: xunkutech/service-read:latest
+    container_name: service-read
+    hostname: service-read
     environment:
       - "TZ=Asia/Shanghai"
-      - "EUREKA_HOSTNAME=demo-discovery-server"
-      - "EUREKA_PORT=9001"
+      - "SERVER_PORT=9003"   
+      - "EUREKA_HOSTNAME=server-eureka"
+      - "EUREKA_PORT=8761"
     restart: on-failure
     networks:
       - "backend"
     ports:
-      - "9903:9903"
+      - "9003:9003"
     links: 
       - eureka
 networks:
