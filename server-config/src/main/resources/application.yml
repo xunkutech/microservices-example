@@ -1,20 +1,13 @@
 server.port: ${SERVER_PORT}
 
-spring:
-  profiles.active: native
-  application.name: server-config
-  cloud.config.server:
-    composite.type: composite
-    native.search-locations: file://///tmp
-
 eureka:
   client:
     serviceUrl.defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
     registryFetchIntervalSeconds: 5
     # Unlike the Eureka server, we do want to register this service
-    register-with-eureka: true
+    registerWithEureka: true
     # We also want to get a copy of the registry to cache
-    fetch-registry: true
+    fetchRegistry: true
   instance:
     leaseRenewalIntervalInSeconds: 5
     preferIpAddress: true

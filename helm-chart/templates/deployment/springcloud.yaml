@@ -4,6 +4,7 @@ metadata:
   name: {{ include "sanyi.fullname" . }}-springcloud
   labels:
     {{- include "sanyi.labels" . | nindent 4 }}
+    app: springcloud
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
@@ -11,6 +12,7 @@ spec:
   selector:
     matchLabels:
       {{- include "sanyi.selectorLabels" . | nindent 6 }}
+      app: springcloud
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -19,6 +21,7 @@ spec:
       {{- end }}
       labels:
         {{- include "sanyi.selectorLabels" . | nindent 8 }}
+        app: springcloud
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -39,7 +42,7 @@ spec:
             - name: SERVER_PORT
               value: {{ .Values.springcloud.eureka.containerPort | quote }}
             - name: EUREKA_HOSTNAME
-              value: {{ (list (include "sanyi.fullname" .) "server-eureka") | join "-" | quote }}
+              value: {{ printf "%s-%s" (include "sanyi.fullname" .) "server-eureka" | quote }}
             - name: EUREKA_PORT
               value: {{ .Values.springcloud.eureka.containerPort | quote }}
             {{- with .Values.springcloud.eureka.environments }}
@@ -62,7 +65,7 @@ spec:
             - name: SERVER_PORT
               value: {{ .Values.springcloud.zuul.containerPort | quote }}
             - name: EUREKA_HOSTNAME
-              value: {{ (list (include "sanyi.fullname" .) "server-eureka") | join "-" | quote }}
+              value: {{ printf "%s-%s" (include "sanyi.fullname" .) "server-eureka" | quote }}
             - name: EUREKA_PORT
               value: {{ .Values.springcloud.eureka.containerPort | quote }}
             {{- with .Values.springcloud.zuul.environments }}
@@ -85,7 +88,7 @@ spec:
             - name: SERVER_PORT
               value: {{ .Values.springcloud.config.containerPort | quote }}
             - name: EUREKA_HOSTNAME
-              value: {{ (list (include "sanyi.fullname" .) "server-eureka") | join "-" | quote }}
+              value: {{ printf "%s-%s" (include "sanyi.fullname" .) "server-eureka" | quote }}
             - name: EUREKA_PORT
               value: {{ .Values.springcloud.eureka.containerPort | quote }}
             {{- with .Values.springcloud.config.environments }}

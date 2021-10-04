@@ -129,6 +129,7 @@ springcloud:
 
 microServices:
   book:
+    replicaCount: 2
     image:
       repository: "xunkutech/service-book"
       tag: "latest"
@@ -142,6 +143,7 @@ microServices:
         memory: "256Mi"
         cpu: "500m"
   library:
+    replicaCount: 2
     image:
       repository: "xunkutech/service-library"
       tag: "latest"
@@ -155,6 +157,7 @@ microServices:
         memory: "256Mi"
         cpu: "500m"
   read:
+    replicaCount: 2
     image:
       repository: "xunkutech/service-read"
       tag: "latest"

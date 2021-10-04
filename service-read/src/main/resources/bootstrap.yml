@@ -3,14 +3,14 @@ server.port: ${SERVER_PORT:9003}
 spring:
   application.name: service-read
   cloud.config:
+    failFast: true
     discovery:
       enabled: true
       serviceId: server-config
-    fail-fast: true
     retry:
       initialInterval: 2000
+      max-interval: 2000
       maxAttempts: 30
-  mvc.servlet.load-on-startup: 1 
 
 eureka:
   client:

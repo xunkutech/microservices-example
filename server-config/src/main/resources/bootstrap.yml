@@ -1,0 +1,11 @@
+spring:
+  profiles.active: native
+  application.name: server-config
+  cloud:
+    config:
+      server:
+        composite.type: composite
+        native.search-locations: file://///tmp
+      allowOverride: true
+      overrideNone: true
+      overrideSystemProperties: true
