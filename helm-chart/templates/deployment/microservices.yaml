@@ -3,7 +3,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "sanyi.fullname" $ }}-{{ $name }}
+  name: {{ include "sanyi.fullname" $ }}-service-{{ $name }}
   labels:
     {{- include "sanyi.labels" $ | nindent 4 }}
 spec:
@@ -38,6 +38,12 @@ spec:
           env:
             - name: TZ
               value: "Asia/Shanghai"
+            - name: SERVER_PORT
+              value: {{ $value.containerPort | quote }}
+            - name: EUREKA_HOSTNAME
+              value: {{ (list (include "sanyi.fullname" $) "server-eureka") | join "-" | quote }}
+            - name: EUREKA_PORT
+              value: {{ $.Values.springcloud.eureka.containerPort | quote }}
             {{- with $value.environments }}
               {{- toYaml . | nindent 12 }}
             {{- end }}

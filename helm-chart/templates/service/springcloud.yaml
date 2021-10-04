@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "sanyi.fullname" . }}-zuul-server
+  name: {{ include "sanyi.fullname" . }}-server-zuul
   labels:
     {{- include "sanyi.labels" . | nindent 4 }}
 spec:
@@ -17,7 +17,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "sanyi.fullname" . }}-eureka-server
+  name: {{ include "sanyi.fullname" . }}-server-eureka
   labels:
     {{- include "sanyi.labels" . | nindent 4 }}
 spec:
@@ -33,7 +33,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "sanyi.fullname" . }}-config-server
+  name: {{ include "sanyi.fullname" . }}-server-config
   labels:
     {{- include "sanyi.labels" . | nindent 4 }}
 spec:

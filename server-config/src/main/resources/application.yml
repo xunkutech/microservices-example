@@ -11,6 +11,10 @@ eureka:
   client:
     serviceUrl.defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
     registryFetchIntervalSeconds: 5
-instance:
-  leaseRenewalIntervalInSeconds: 5
-  preferIpAddress: true
+    # Unlike the Eureka server, we do want to register this service
+    register-with-eureka: true
+    # We also want to get a copy of the registry to cache
+    fetch-registry: true
+  instance:
+    leaseRenewalIntervalInSeconds: 5
+    preferIpAddress: true

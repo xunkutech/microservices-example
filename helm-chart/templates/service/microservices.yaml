@@ -3,7 +3,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "sanyi.fullname" $ }}-{{ $name }}
+  name: {{ include "sanyi.fullname" $ }}-service-{{ $name }}
   labels:
     {{- include "sanyi.labels" $ | nindent 4 }}
 spec:

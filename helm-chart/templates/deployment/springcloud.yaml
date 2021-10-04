@@ -36,6 +36,12 @@ spec:
           env:
             - name: TZ
               value: "Asia/Shanghai"
+            - name: SERVER_PORT
+              value: {{ .Values.springcloud.eureka.containerPort | quote }}
+            - name: EUREKA_HOSTNAME
+              value: {{ (list (include "sanyi.fullname" .) "server-eureka") | join "-" | quote }}
+            - name: EUREKA_PORT
+              value: {{ .Values.springcloud.eureka.containerPort | quote }}
             {{- with .Values.springcloud.eureka.environments }}
               {{- toYaml . | nindent 12 }}
             {{- end }}
@@ -53,6 +59,12 @@ spec:
           env:
             - name: TZ
               value: "Asia/Shanghai"
+            - name: SERVER_PORT
+              value: {{ .Values.springcloud.zuul.containerPort | quote }}
+            - name: EUREKA_HOSTNAME
+              value: {{ (list (include "sanyi.fullname" .) "server-eureka") | join "-" | quote }}
+            - name: EUREKA_PORT
+              value: {{ .Values.springcloud.eureka.containerPort | quote }}
             {{- with .Values.springcloud.zuul.environments }}
               {{- toYaml . | nindent 12 }}
             {{- end }}
@@ -70,6 +82,12 @@ spec:
           env:
             - name: TZ
               value: "Asia/Shanghai"
+            - name: SERVER_PORT
+              value: {{ .Values.springcloud.config.containerPort | quote }}
+            - name: EUREKA_HOSTNAME
+              value: {{ (list (include "sanyi.fullname" .) "server-eureka") | join "-" | quote }}
+            - name: EUREKA_PORT
+              value: {{ .Values.springcloud.eureka.containerPort | quote }}
             {{- with .Values.springcloud.config.environments }}
               {{- toYaml . | nindent 12 }}
             {{- end }}
