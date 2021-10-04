@@ -1,50 +1,29 @@
+{{- range $name, $value := .Values.springcloud }}
+---
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "sanyi.fullname" . }}-server-zuul
+  name: {{ printf "%s-%s" (include "sanyi.fullname" $) $name }}
   labels:
-    {{- include "sanyi.labels" . | nindent 4 }}
+    {{- include "sanyi.labels" $ | nindent 4 }}
 spec:
+  {{- if eq $name $.Values.routerServer }}
   type: NodePort
-  ports:
-    - port: {{ .Values.springcloud.zuul.servicePort }}
-      targetPort: {{ .Values.springcloud.zuul.containerPort }}
-      protocol: TCP
-      name: zuul
-  selector:
-    {{- include "sanyi.selectorLabels" . | nindent 4 }}
-    app: springcloud
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: {{ include "sanyi.fullname" . }}-server-eureka
-  labels:
-    {{- include "sanyi.labels" . | nindent 4 }}
-spec:
+  {{- else }}
   type: ClusterIP
   clusterIP: None
+  {{- end }}
   ports:
-    - port: {{ .Values.springcloud.eureka.containerPort }}
+    - name: http
       protocol: TCP
-      name: eureka
+      {{- if $value.servicePort }}
+      port: {{ $value.servicePort }}
+      targetPort:  {{ $value.containerPort }}
+      {{- else }}
+      port: {{ $value.containerPort }}
+      {{- end }}
   selector:
-    {{- include "sanyi.selectorLabels" . | nindent 4 }}
-    app: springcloud
+    {{- include "sanyi.selectorLabels" $ | nindent 4 }}
+    app: {{ printf "%s-%s" (include "sanyi.fullname" $) "springcloud" }}
 ---
-apiVersion: v1
-kind: Service
-metadata:
-  name: {{ include "sanyi.fullname" . }}-server-config
-  labels:
-    {{- include "sanyi.labels" . | nindent 4 }}
-spec:
-  type: ClusterIP
-  clusterIP: None
-  ports:
-    - port: {{ .Values.springcloud.config.containerPort }}
-      protocol: TCP
-      name: config
-  selector:
-    {{- include "sanyi.selectorLabels" . | nindent 4 }}
-    app: springcloud
+{{- end }}

@@ -60,3 +60,17 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Create register server name
+*/}}
+{{- define "sanyi.registerServerName" -}}
+{{- printf "%s-%s" (include "sanyi.fullname" .) .Values.registerServer }} 
+{{- end }}
+
+{{/*
+Create register server port
+*/}}
+{{- define "sanyi.registerServerPort" -}}
+{{- index .Values "springcloud" .Values.registerServer "containerPort" }}
+{{- end }}

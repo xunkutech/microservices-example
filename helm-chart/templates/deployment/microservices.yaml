@@ -3,10 +3,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "sanyi.fullname" $ }}-service-{{ $name }}
+  name: {{ printf "%s-%s" (include "sanyi.fullname" $) $name }}
   labels:
     {{- include "sanyi.labels" $ | nindent 4 }}
-    app: service-{{ $name }}
+    app: {{ printf "%s-%s" (include "sanyi.fullname" $) $name }}
 spec:
   {{- if not $.Values.autoscaling.enabled }}
   {{- if $value.replicaCount }}
@@ -18,7 +18,7 @@ spec:
   selector:
     matchLabels:
       {{- include "sanyi.selectorLabels" $ | nindent 6 }}
-      app: service-{{ $name }}
+      app: {{ printf "%s-%s" (include "sanyi.fullname" $) $name }}
   template:
     metadata:
       {{- with $.Values.podAnnotations }}
@@ -27,7 +27,7 @@ spec:
       {{- end }}
       labels:
         {{- include "sanyi.selectorLabels" $ | nindent 8 }}
-        app: service-{{ $name }}
+        app: {{ printf "%s-%s" (include "sanyi.fullname" $) $name }}
     spec:
       {{- with $.Values.imagePullSecrets }}
       imagePullSecrets:
@@ -48,16 +48,16 @@ spec:
             - name: SERVER_PORT
               value: {{ $value.containerPort | quote }}
             - name: EUREKA_HOSTNAME
-              value: {{ printf "%s-%s" (include "sanyi.fullname" $) "server-eureka" | quote }}
+              value: {{ include "sanyi.registerServerName" $ | quote }}
             - name: EUREKA_PORT
-              value: {{ $.Values.springcloud.eureka.containerPort | quote }}
+              value: {{ include "sanyi.registerServerPort" $ | quote }}
             {{- with $value.environments }}
               {{- toYaml . | nindent 12 }}
             {{- end }}
           ports:
             - name: http
-              containerPort: {{ $value.containerPort }}
               protocol: TCP
+              containerPort: {{ $value.containerPort }}
           resources:
             {{- toYaml $value.resources | nindent 12 }}
       {{- with $.Values.nodeSelector }}

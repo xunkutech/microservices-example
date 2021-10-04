@@ -81,8 +81,12 @@ tolerations: []
 
 affinity: {}
 
+registerServer: "server-eureka"
+
+routerServer: "server-zuul"
+
 springcloud:
-  eureka:
+  server-eureka:
     image:
       repository: "xunkutech/server-eureka"
       tag: "latest"
@@ -99,13 +103,12 @@ springcloud:
       limits:
         memory: "256Mi"
         cpu: "500m"
-  zuul:
+  server-zuul:
     image:
       repository: "xunkutech/server-zuul"
       tag: "latest"
     containerPort: 9000
     servicePort: 39000
-    environments: []
     resources:
       requests:
         memory: "256Mi"
@@ -113,12 +116,11 @@ springcloud:
       limits:
         memory: "256Mi"
         cpu: "500m"
-  config:
+  server-config:
     image:
       repository: "xunkutech/server-config"
       tag: "latest"
     containerPort: 8888
-    environments: []
     resources:
       requests:
         memory: "256Mi"
@@ -128,13 +130,12 @@ springcloud:
         cpu: "500m"
 
 microServices:
-  book:
+  service-book:
     replicaCount: 2
     image:
       repository: "xunkutech/service-book"
       tag: "latest"
     containerPort: 9901
-    environments: []
     resources:
       requests:
         memory: "256Mi"
@@ -142,13 +143,12 @@ microServices:
       limits:
         memory: "256Mi"
         cpu: "500m"
-  library:
+  service-library:
     replicaCount: 2
     image:
       repository: "xunkutech/service-library"
       tag: "latest"
     containerPort: 9902
-    environments: []
     resources:
       requests:
         memory: "256Mi"
@@ -156,13 +156,12 @@ microServices:
       limits:
         memory: "256Mi"
         cpu: "500m"
-  read:
+  service-read:
     replicaCount: 2
     image:
       repository: "xunkutech/service-read"
       tag: "latest"
     containerPort: 9903
-    environments: []
     resources:
       requests:
         memory: "256Mi"
