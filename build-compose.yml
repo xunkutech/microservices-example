@@ -1,14 +1,10 @@
 version: '3.9'
 services:
   build-java:
-    build:
-      context: .
-      dockerfile: build-java.dockerfile
-    image: build-java:latest
+    image:  maven:3.8.2-adoptopenjdk-8
     environment:
       - "TZ=Asia/Shanghai"
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
       - maven-cache-volume:/cache
       - .:/workspace:cached
     ulimits:
