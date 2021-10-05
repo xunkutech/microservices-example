@@ -1,0 +1,71 @@
+version: '3.9'
+services:
+  build-java:
+    build:
+      context: .
+      dockerfile: build-java.dockerfile
+    image: build-java:latest
+    environment:
+      - "TZ=Asia/Shanghai"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - maven-cache-volume:/cache
+      - .:/workspace:cached
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 50000
+        hard: 50000
+    command: >
+      mvn
+      -s /workspace/settings.xml
+      -Dmaven.repo.local=/cache
+      -Dmaven.test.skip=true
+      -f /workspace/pom.xml
+      clean package
+  build-frontend-helloworld:
+    image: node:12-alpine
+    environment:
+      - "TZ=Asia/Shanghai"
+    volumes:
+      - npm-cache-volume:/cache
+      - ./frontend-helloworld:/workspace:cached
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 50000
+        hard: 50000
+    command: >
+      /bin/sh -c "
+      cd /workspace &&
+      npm
+      --cache=/cache
+      --registry=https://registry.npm.taobao.org
+      --prefer-offline=true
+      --package-lock=false
+      install &&
+      npm run build"
+  build-frontend-helloworld-yarn:
+    image: node:12-alpine
+    environment:
+      - "TZ=Asia/Shanghai"
+    volumes:
+      - yarn-cache-volume:/cache
+      - .:/workspace:cached
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 30000
+        hard: 30000
+    command: >
+      /bin/sh -c "
+      yarn --use-yarnrc /workspace/yarnrc --registry https://registry.npm.taobao.org --cwd /workspace/frontend-helloworld config list &&
+      yarn --use-yarnrc /workspace/yarnrc --registry https://registry.npm.taobao.org --cwd /workspace/frontend-helloworld install --non-interactive &&
+      yarn --use-yarnrc /workspace/yarnrc --registry https://registry.npm.taobao.org --cwd /workspace/frontend-helloworld run build --non-interactive"
+volumes:
+  maven-cache-volume:
+    name: maven-cache
+  npm-cache-volume:
+    name: npm-cache
+  yarn-cache-volume:
+    name: yarn-cache

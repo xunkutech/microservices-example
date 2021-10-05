@@ -169,3 +169,20 @@ microServices:
       limits:
         memory: "512Mi"
         cpu: "500m"
+  frontend-helloworld:
+    replicaCount: 2
+    image:
+      repository: "xunkutech/frontend-helloworld"
+      tag: "latest"
+    containerPort: 8080
+    servicePort: 38080
+    environments:
+      - name: BAIDU_URI
+        value: "www.baidu.com"
+    resources:
+      requests:
+        memory: "256Mi"
+        cpu: "50m"
+      limits:
+        memory: "256Mi"
+        cpu: "500m"

@@ -6,8 +6,7 @@ metadata:
     {{- include "sanyi.labels" . | nindent 4 }}
     app: {{ printf "%s-%s" (include "sanyi.fullname" $) "springcloud" }}
 spec:
-  {{- if not .Values.autoscaling.enabled }}
-  replicas: {{ .Values.replicaCount }}
+  replicas: 1
   {{- end }}
   selector:
     matchLabels:

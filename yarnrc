@@ -1,0 +1,4 @@
+cache-folder /cache
+yarn-offline-mirror /cache
+yarn-offline-mirror-pruning true
+network-timeout 300000

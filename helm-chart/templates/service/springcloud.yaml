@@ -7,10 +7,8 @@ metadata:
   labels:
     {{- include "sanyi.labels" $ | nindent 4 }}
 spec:
-  {{- if eq $name $.Values.routerServer }}
-  type: NodePort
-  {{- else }}
   type: ClusterIP
+  {{- if not $value.servicePort }}
   clusterIP: None
   {{- end }}
   ports:

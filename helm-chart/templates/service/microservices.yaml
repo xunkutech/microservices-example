@@ -8,11 +8,18 @@ metadata:
     {{- include "sanyi.labels" $ | nindent 4 }}
 spec:
   type: ClusterIP
+  {{- if not $value.servicePort }}
   clusterIP: None
+  {{- end }}
   ports:
     - name: http
       protocol: TCP
+      {{- if $value.servicePort }}
+      port: {{ $value.servicePort }}
+      targetPort:  {{ $value.containerPort }}
+      {{- else }}
       port: {{ $value.containerPort }}
+      {{- end }}
   selector:
     {{- include "sanyi.selectorLabels" $ | nindent 4 }}
     app: {{ printf "%s-%s" (include "sanyi.fullname" $) $name }}
