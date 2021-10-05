@@ -41,16 +41,26 @@ service:
   port: 80
 
 ingress:
-  enabled: false
-  className: ""
-  annotations: {}
+  enabled: true
+  className: "nginx"
+  annotations:
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
-    - host: chart-example.local
+    - host: "localhost"
       paths:
-        - path: /
+        - path: "/"
           pathType: ImplementationSpecific
+          serviceName: "frontend-helloworld"
+        - path: "/service-book"
+          pathType: ImplementationSpecific
+          serviceName: "server-zuul"
+        - path: "/service-library"
+          pathType: ImplementationSpecific
+          serviceName: "server-zuul"
+        - path: "/service-read"
+          pathType: ImplementationSpecific
+          serviceName: "server-zuul"
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
@@ -103,19 +113,6 @@ springcloud:
       limits:
         memory: "256Mi"
         cpu: "500m"
-  server-zuul:
-    image:
-      repository: "xunkutech/server-zuul"
-      tag: "latest"
-    containerPort: 9000
-    servicePort: 39000
-    resources:
-      requests:
-        memory: "256Mi"
-        cpu: "50m"
-      limits:
-        memory: "256Mi"
-        cpu: "500m"
   server-config:
     image:
       repository: "xunkutech/server-config"
@@ -130,6 +127,20 @@ springcloud:
         cpu: "500m"
 
 microServices:
+  server-zuul:
+    replicaCount: 2
+    image:
+      repository: "xunkutech/server-zuul"
+      tag: "latest"
+    containerPort: 9000
+    servicePort: 39000
+    resources:
+      requests:
+        memory: "256Mi"
+        cpu: "50m"
+      limits:
+        memory: "256Mi"
+        cpu: "500m"
   service-book:
     replicaCount: 2
     image:

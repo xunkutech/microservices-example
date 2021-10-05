@@ -21,15 +21,20 @@ brew install helm
 # Install dashboard
 helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard/
 helm install --create-namespace --namespace kubernetes-dashboard kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard
-
-# disable dashboard login token
+# Get dashboard token
+kubectl -n kubernetes-dashboard describe secrets `kubectl -n kubernetes-dashboard get secrets |grep kubernetes-dashboard-token |cut -f1 -d' '`
+# Or
+# Disable dashboard login token
 kubectl -n kubernetes-dashboard patch deployment kubernetes-dashboard --type 'json' -p '[{"op": "add", "path": "/spec/template/spec/containers/0/args/-", "value": "--enable-skip-login"}]'
 
-helm repo add metrics-server https://kubernetes-sigs.github.io/metrics-server/
-helm upgrade --install --namespace kube-system metrics-server metrics-server/metrics-server
+# Install nginx ingress
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm install --create-namespace --namespace ingress-nginx ingress-nginx ingress-nginx/ingress-nginx
 
-kubectl delete  -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+# Install metrics
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
 kubectl -n kube-system patch deployment metrics-server --type 'json' -p '[{"op": "add", "path": "/spec/template/spec/containers/0/args/-", "value": "--kubelet-insecure-tls"}]'
+kubectl get --raw /apis/metrics.k8s.io/v1beta1/nodes
 
 # open dashboard
 kubectl proxy
@@ -77,7 +82,7 @@ kubectl get all
 helm lint ./helm-chart
 helm template ./helm-chart
 helm install --create-namespace --namespace sanyi-erp --debug --dry-run sanyi ./helm-chart
-helm install --create-namespace --namespace sanyi-erp sanyi ./helm-chart
+helm upgrade --install --create-namespace --namespace sanyi-erp sanyi ./helm-chart
 helm uninstall --namespace sanyi-erp sanyi
 minikube service list
 kubectl -n sanyi-erp get svc

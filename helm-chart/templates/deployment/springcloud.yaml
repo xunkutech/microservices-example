@@ -7,7 +7,6 @@ metadata:
     app: {{ printf "%s-%s" (include "sanyi.fullname" $) "springcloud" }}
 spec:
   replicas: 1
-  {{- end }}
   selector:
     matchLabels:
       {{- include "sanyi.selectorLabels" . | nindent 6 }}
