@@ -44,7 +44,7 @@ spec:
               value: {{ include "sanyi.registerServerName" $ | quote }}
             - name: EUREKA_PORT
               value: {{ include "sanyi.registerServerPort" $ | quote }}
-            {{- with $.environments }}
+            {{- with $value.environments }}
               {{- toYaml . | nindent 12 }}
             {{- end }}
           ports:

@@ -66,7 +66,7 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
-resources: {}
+  # resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
@@ -92,8 +92,6 @@ tolerations: []
 affinity: {}
 
 registerServer: "server-eureka"
-
-routerServer: "server-zuul"
 
 springcloud:
   server-eureka:
@@ -126,7 +124,7 @@ springcloud:
         memory: "256Mi"
         cpu: "500m"
 
-microServices:
+microService:
   server-zuul:
     replicaCount: 2
     image:
@@ -197,3 +195,32 @@ microServices:
       limits:
         memory: "256Mi"
         cpu: "500m"
+
+cronjob:
+#      ┌────────────────── timezone (optional)
+#      |      ┌───────────── minute (0 - 59)
+#      |      │ ┌───────────── hour (0 - 23)
+#      |      │ │ ┌───────────── day of the month (1 - 31)
+#      |      │ │ │ ┌───────────── month (1 - 12)
+#      |      │ │ │ │ ┌───────────── day of the week (0 - 6) (Sunday to Saturday;
+#      |      │ │ │ │ │                                   7 is also Sunday on some systems)
+#      |      │ │ │ │ │
+#      |      │ │ │ │ │
+# CRON_TZ=UTC * * * * *
+  hello:
+    schedule: "*/1 * * * *"
+    tasks:
+      - image:
+          repository: busybox
+          tag: 1.33.1
+        command:
+          - /bin/sh
+          - -c
+          - date; echo Hello from the Kubernetes cluster1
+      - image:
+          repository: busybox
+          tag: 1.33.1
+        command:
+          - /bin/sh
+          - -c
+          - date; echo Hello from the Kubernetes cluster2

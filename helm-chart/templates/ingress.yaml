@@ -51,10 +51,10 @@ spec:
               service:
                 name: {{ printf "%s-%s" (include "sanyi.fullname" $) .serviceName | quote }}
                 port:
-                  number: {{ index $.Values "microServices" .serviceName "servicePort"}}
+                  number: {{ index $.Values "microService" .serviceName "servicePort"}}
               {{- else }}
               serviceName: {{ printf "%s-%s" (include "sanyi.fullname" $) .serviceName | quote }}
-              servicePort: {{ index $.Values "microServices" .serviceName "servicePort"}}
+              servicePort: {{ index $.Values "microService" .serviceName "servicePort"}}
               {{- end }}
           {{- end }}
     {{- end }}

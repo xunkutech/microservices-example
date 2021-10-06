@@ -1,19 +1,37 @@
+{{- range $name, $value := .Values.cronjob}}
+---
+{{- if semverCompare ">=1.21-0" $.Capabilities.KubeVersion.GitVersion -}}
 apiVersion: batch/v1
+{{- else -}}
+apiVersion: batch/v1beta1
+{{- end }}
 kind: CronJob
 metadata:
-  name: hello
+  name: {{ printf "%s-%s" (include "sanyi.fullname" $) $name }}
+  labels:
+    {{- include "sanyi.labels" $ | nindent 4 }}
 spec:
-  schedule: "*/1 * * * *"
+  schedule: {{ $value.schedule |quote }}
   jobTemplate:
     spec:
       template:
         spec:
+          {{- with $.Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          serviceAccountName: {{ include "sanyi.serviceAccountName" $ }}
+          securityContext:
+            {{- toYaml $.Values.podSecurityContext | nindent 12 }}
           containers:
-          - name: hello
-            image: busybox:1.33.1
-            imagePullPolicy: IfNotPresent
-            command:
-            - /bin/sh
-            - -c
-            - date; echo Hello from the Kubernetes cluster
+            {{- range $index, $task := $value.tasks }}
+            - name: {{ printf "%s-%s-%d" $.Chart.Name $name $index }}
+              securityContext:
+              {{- toYaml $.Values.securityContext | nindent 16 }}
+              image:  {{ printf "%s:%s" $task.image.repository $task.image.tag }}
+              imagePullPolicy: {{ $.Values.image.pullPolicy }}
+              command:
+                {{- toYaml $task.command | nindent 16 }}
+            {{- end }}
           restartPolicy: OnFailure
+{{- end }}
