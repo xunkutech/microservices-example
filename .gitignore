@@ -53,3 +53,6 @@ yarn-error.log*
 
 # cache file
 /cache
+
+# Do not include image tags file
+tags.yaml

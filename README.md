@@ -53,10 +53,12 @@ docker image ls |grep xunkutech |tr -s ' ' |cut -f3 -d' ' |xargs docker rmi --fo
 ## Step 2: Build the docker images from souce code
 
 ```bash
+export COMMIT=$(git rev-parse --short HEAD)
 docker-compose -f build-compose.yml run build-java
 docker-compose -f build-compose.yml run build-frontend-helloworld
+cat docker-compose.yml |grep '\${COMMIT}' | sed -n 's/^.*image:/echo/; s/:\$/: $/p'| xargs -L 1 -I {} sh -c "{}" > helm-chart/tags.yaml
 docker-compose -f docker-compose.yml build
-
+docker-compose up
 ```
 
 ## Step 3. Test in the docker compose

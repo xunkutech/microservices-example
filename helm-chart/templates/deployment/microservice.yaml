@@ -39,7 +39,16 @@ spec:
         - name: {{ $.Chart.Name }}
           securityContext:
             {{- toYaml $.Values.securityContext | nindent 12 }}
+          {{- if .image.tag }}
           image: "{{ .image.repository }}:{{ .image.tag }}"
+          {{- else }}
+          {{ $tags := $.Files.Get "tags.yaml" | toString | fromYaml }}
+          {{- if and $tags (index $tags .image.repository) }}
+          image: {{ printf "%s:%s" .image.repository (index $tags .image.repository ) | quote}}
+          {{- else }}
+          image: "{{ .image.repository }}"
+          {{- end }}
+          {{- end }}
           imagePullPolicy: {{ $.Values.image.pullPolicy }}
           env:
             - name: TZ

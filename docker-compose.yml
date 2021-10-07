@@ -2,7 +2,7 @@ version: '3.8'
 services:
   eureka:
     build: ./server-eureka
-    image: xunkutech/server-eureka:latest
+    image: xunkutech/server-eureka:${COMMIT}
     container_name: server-eureka
     hostname: server-eureka
     environment:
@@ -17,7 +17,7 @@ services:
       - "8761:8761"
   config:
     build: ./server-config
-    image: xunkutech/server-config:latest
+    image: xunkutech/server-config:${COMMIT}
     container_name: server-config
     hostname: server-config
     environment:
@@ -34,7 +34,7 @@ services:
       - eureka
   zuul:
     build: ./server-zuul
-    image: xunkutech/server-zuul:latest
+    image: xunkutech/server-zuul:${COMMIT}
     container_name: server-zuul
     hostname: server-zuul
     environment:
@@ -51,7 +51,7 @@ services:
       - eureka
   book:
     build: ./service-book
-    image: xunkutech/service-book:latest
+    image: xunkutech/service-book:${COMMIT}
     container_name: service-book
     hostname: service-book
     environment:
@@ -68,7 +68,7 @@ services:
       - eureka
   library:
     build: ./service-library
-    image: xunkutech/service-library:latest
+    image: xunkutech/service-library:${COMMIT}
     container_name: service-library
     hostname: service-library
     environment:
@@ -86,7 +86,7 @@ services:
   read:
     build:
       context: ./service-read
-    image: xunkutech/service-read:latest
+    image: xunkutech/service-read:${COMMIT}
     container_name: service-read
     hostname: service-read
     environment:
@@ -104,7 +104,7 @@ services:
   helloworld:
     build:
       context: ./frontend-helloworld
-    image: xunkutech/frontend-helloworld:latest
+    image: xunkutech/frontend-helloworld:${COMMIT}
     container_name: frontent
     environment:
       - "TZ=Asia/Shanghai"
