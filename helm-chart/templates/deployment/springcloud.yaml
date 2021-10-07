@@ -52,7 +52,13 @@ spec:
               containerPort: {{ $value.containerPort }}
               protocol: TCP
           resources:
+          {{- if $value.resources }}
             {{- toYaml $value.resources | nindent 12 }}
+          {{- else if $value.resourcesType }}
+            {{- toYaml (index $.Values.resources $value.resourcesType) | nindent 12 }}
+          {{- else }}
+            {{- toYaml $.Values.resources.default | nindent 12 }}
+          {{- end }}
         {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
