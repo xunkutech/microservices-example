@@ -104,14 +104,14 @@ springcloud:
         value: "test"
       - name: JVM_OPTS
         value: "-Xms256m -Xmx256m"
-    registerWithEureka: true
+    injectEurekaEnv: true
     resourcesType: normal
   server-config:
     image:
       repository: "xunkutech/server-config"
       tag: "latest"
     containerPort: 8888
-    registerWithEureka: true
+    injectEurekaEnv: true
     resources:
       requests:
         memory: "256Mi"
@@ -128,7 +128,7 @@ microService:
       tag: "latest"
     containerPort: 9000
     servicePort: 39000
-    registerWithEureka: true
+    injectEurekaEnv: true
     resources:
       requests:
         memory: "256Mi"
@@ -142,7 +142,7 @@ microService:
       repository: "xunkutech/service-book"
       tag: "latest"
     containerPort: 9901
-    registerWithEureka: true
+    injectEurekaEnv: true
     resourcesType: normal
   service-library:
     replicaCount: 2
@@ -150,14 +150,14 @@ microService:
       repository: "xunkutech/service-library"
       tag: "latest"
     containerPort: 9902
-    registerWithEureka: true
+    injectEurekaEnv: true
   service-read:
     replicaCount: 2
     image:
       repository: "xunkutech/service-read"
       tag: "latest"
     containerPort: 9903
-    registerWithEureka: true
+    injectEurekaEnv: true
   frontend-helloworld:
     replicaCount: 2
     image:

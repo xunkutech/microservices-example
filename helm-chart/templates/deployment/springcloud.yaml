@@ -40,7 +40,7 @@ spec:
               value: "Asia/Shanghai"
             - name: SERVER_PORT
               value: {{ $value.containerPort | quote }}
-            {{- if $value.registerWithEureka }}
+            {{- if $value.injectEurekaEnv }}
             - name: EUREKA_HOSTNAME
               value: {{ include "sanyi.registerServerName" $ | quote }}
             - name: EUREKA_PORT
