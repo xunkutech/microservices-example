@@ -1,6 +1,6 @@
 version: '3.8'
 services:
-  eureka:
+  server-eureka:
     build: ./server-eureka
     image: xunkutech/server-eureka:${COMMIT}
     container_name: server-eureka
@@ -15,7 +15,7 @@ services:
       - "backend"
     ports:
       - "8761:8761"
-  config:
+  server-config:
     build: ./server-config
     image: xunkutech/server-config:${COMMIT}
     container_name: server-config
@@ -30,9 +30,7 @@ services:
       - "backend"
     ports:
       - "8888:8888"
-    links: 
-      - eureka
-  zuul:
+  server-zuul:
     build: ./server-zuul
     image: xunkutech/server-zuul:${COMMIT}
     container_name: server-zuul
@@ -47,9 +45,7 @@ services:
       - "backend"
     ports:
       - "9000:9000"
-    links: 
-      - eureka
-  book:
+  service-book:
     build: ./service-book
     image: xunkutech/service-book:${COMMIT}
     container_name: service-book
@@ -64,9 +60,7 @@ services:
       - "backend"
     ports:
       - "9001:9001"
-    links: 
-      - eureka
-  library:
+  service-library:
     build: ./service-library
     image: xunkutech/service-library:${COMMIT}
     container_name: service-library
@@ -81,9 +75,7 @@ services:
       - "backend"
     ports:
       - "9002:9002"
-    links: 
-      - eureka
-  read:
+  service-read:
     build:
       context: ./service-read
     image: xunkutech/service-read:${COMMIT}
@@ -99,9 +91,7 @@ services:
       - "backend"
     ports:
       - "9003:9003"
-    links: 
-      - eureka
-  helloworld:
+  frontend-helloworld:
     build:
       context: ./frontend-helloworld
     image: xunkutech/frontend-helloworld:${COMMIT}

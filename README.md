@@ -50,21 +50,47 @@ docker image ls |grep none |tr -s ' ' |cut -f3 -d' ' |xargs docker rmi --force
 docker image ls |grep xunkutech |tr -s ' ' |cut -f3 -d' ' |xargs docker rmi --force
 ```
 
-## Step 2: Build the docker images from souce code
+## Step 2: Compile the from source code
 
 ```bash
-export COMMIT=$(git rev-parse --short HEAD)
+# Compile the backend
 docker-compose -f build-compose.yml run build-java
+# Compile the frontend
 docker-compose -f build-compose.yml run build-frontend-helloworld
-cat docker-compose.yml |grep '\${COMMIT}' | sed -n 's/^.*image:/echo/; s/:\$/: $/p'| xargs -L 1 -I {} sh -c "{}" > helm-chart/tags.yaml
-docker-compose -f docker-compose.yml build
-docker-compose up
+```
+## Step3: Build the docker images
+
+```bash
+cat <<EOF |xargs -L 1 -I {} sh -c "git log -1 --pretty=format:\"COMMIT=%h docker-compose -f docker-compose.yml build {};\" {}" |bash
+server-eureka
+server-config
+server-zuul
+service-book
+service-library
+service-read
+frontend-helloworld
+EOF
+
+docker image ls
 ```
 
-## Step 3. Test in the docker compose
+## Step 4. Test in the docker compose
 
 ```bash
-docker-compose up
+# Start service
+cat <<EOF |xargs -L 1 -I {} sh -c "git log -1 --pretty=format:\"COMMIT=%h docker-compose -f docker-compose.yml up --no-deps -d {};\" {}" |bash
+server-eureka
+server-config
+server-zuul
+service-book
+service-library
+service-read
+frontend-helloworld
+EOF
+
+# Test dockers
+docker ps
+
 # Open Eureka Dashboard:
 open http://`minikube ip`:8761/
 # Query books: 
@@ -73,9 +99,20 @@ open http://`minikube ip`:9000/book-service/books
 open http://`minikube ip`:9000/library-service/librarys
 # Query read:
 open http://`minikube ip`:9000/read-service/read/Book2
+
+# Stop service
+cat <<EOF |xargs -L 1 -I {} sh -c "git log -1 --pretty=format:\"COMMIT=%h docker-compose -f docker-compose.yml stop {};\" {}" |bash
+server-eureka
+server-config
+server-zuul
+service-book
+service-library
+service-read
+frontend-helloworld
+EOF
 ```
 
-## Step 4. Run on kubernetes
+## Step 5. Run on kubernetes
 
 ```bash
 kubectl get nodes
