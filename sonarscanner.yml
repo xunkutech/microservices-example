@@ -5,15 +5,22 @@ services:
     image:  sonarsource/sonar-scanner-cli:4.7
     environment:
       - "TZ=Asia/Shanghai"
-      - "SONAR_SCANNER_OPTS=-Dsonar.host.url=${SONAR_HOST} -Dsonar.projectKey=${SONAR_PROJECT} -Dsonar.login=${SONAR_LOGIN} -Dsonar.source=/usr/src -Dsonar.java.binaries=/usr/src ${SONAR_OPTS:-}"
+      - "SONAR_SCANNER_OPTS=-Dsonar.host.url=${SONAR_HOST:-http://sonarqube:9000} -Dsonar.projectKey=${SONAR_PROJECT} -Dsonar.login=${SONAR_LOGIN} -Dsonar.source=/usr/src -Dsonar.java.binaries=/usr/src ${SONAR_OPTS:-}"
     volumes:
       - ${PROJECT_PATH}:/usr/src
       - sonarscanner_cache:/opt/sonar-scanner/.sonar/cache
+    networks:
+      - sonarnet
     ulimits:
       nproc: 65535
       nofile:
         soft: 50000
         hard: 50000
+
+networks:
+  sonarnet:
+    name: sonarqube_network
+    driver: bridge
 
 volumes:
   sonarscanner_cache:

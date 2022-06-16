@@ -58,10 +58,12 @@ PROJECT_PATH=$PWD MAVEN_CONF=$PWD/settings.xml docker-compose -f build-java.yml 
 # Compile the frontend
 PROJECT_PATH=$PWD/frontend-helloworld docker-compose -f build-npm.yml run build
 PROJECT_PATH=$PWD/frontend-helloworld YARNRC=$PWD/yarnrc docker-compose -f build-yarn.yml run build
-# Scan the code
+# Start the Sonarqube, then setup the project to get the login key.
 docker-compose -f sonar-server.yml up -d
-PROJECT_PATH=$PWD SONAR_HOST=http://192.168.40.8:9000 SONAR_PROJECT=java SONAR_LOGIN=b826bae927c48de56e0a77d911f7f4af25520dc4 SONAR_OPTS="" docker-compose -f sonarscanner.yml run scan
-PROJECT_PATH=$PWD/frontend-helloworld SONAR_HOST=http://192.168.40.8:9000 SONAR_PROJECT=js SONAR_LOGIN=b826bae927c48de56e0a77d911f7f4af25520dc4 SONAR_OPTS="" docker-compose -f sonarscanner.yml run scan
+# Scan the java project
+PROJECT_PATH=$PWD SONAR_PROJECT=java SONAR_LOGIN=b826bae927c48de56e0a77d911f7f4af25520dc4 SONAR_OPTS="" docker-compose -f sonarscanner.yml run scan
+# Scan the js project
+PROJECT_PATH=$PWD/frontend-helloworld SONAR_PROJECT=js SONAR_LOGIN=b826bae927c48de56e0a77d911f7f4af25520dc4 SONAR_OPTS="" docker-compose -f sonarscanner.yml run scan
 ```
 ## Step3: Build the docker images
 
