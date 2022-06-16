@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  build:
+    image:  maven:3.8.2-adoptopenjdk-8
+    environment:
+      - "TZ=Asia/Shanghai"
+    volumes:
+      - maven-cache:/cache
+      - ${MAVEN_CONF}:/usr/share/maven/conf/settings.xml:ro
+      - ${PROJECT_PATH}:/workspace:cached
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 50000
+        hard: 50000
+    command: >
+      mvn
+      -s /usr/share/maven/conf/settings.xml
+      -Dmaven.repo.local=/cache
+      -Dmaven.test.skip=true
+      -f /workspace/pom.xml
+      clean package
+
+volumes:
+  maven-cache:
+    name: maven-cache

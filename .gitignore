@@ -56,3 +56,6 @@ yarn-error.log*
 
 # Do not include image tags file
 tags.yaml
+
+# Sonar scanner work file
+.scannerwork/

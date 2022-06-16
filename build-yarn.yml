@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  build:
+    image: node:12-alpine
+    environment:
+      - "TZ=Asia/Shanghai"
+    volumes:
+      - yarn-cache:/cache
+      - ${YARNRC}:/workspace/yarnrc:ro
+      - ${PROJECT_PATH}:/workspace:cached
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 30000
+        hard: 30000
+    command: >
+      /bin/sh -c "
+      yarn --use-yarnrc /workspace/yarnrc --registry https://registry.npm.taobao.org --cwd /workspace config list &&
+      yarn --use-yarnrc /workspace/yarnrc --registry https://registry.npm.taobao.org --cwd /workspace install --non-interactive &&
+      yarn --use-yarnrc /workspace/yarnrc --registry https://registry.npm.taobao.org --cwd /workspace run build --non-interactive"
+
+volumes:
+  yarn-cache:
+    name: yarn-cache

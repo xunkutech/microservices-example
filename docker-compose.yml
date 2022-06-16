@@ -1,4 +1,5 @@
-version: '3.8'
+version: '3'
+
 services:
   server-eureka:
     build: ./server-eureka
@@ -105,6 +106,8 @@ services:
     restart: on-failure
     networks:
       - "backend"
+
 networks:
   backend:
+    name: backend
     driver: bridge

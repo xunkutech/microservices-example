@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  build:
+    image: node:12-alpine
+    environment:
+      - "TZ=Asia/Shanghai"
+    volumes:
+      - npm-cache:/cache
+      - ${PROJECT_PATH}:/workspace:cached
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 50000
+        hard: 50000
+    command: >
+      /bin/sh -c "
+      cd /workspace &&
+      npm
+      --cache=/cache
+      --registry=https://registry.npm.taobao.org
+      --prefer-offline=true
+      --package-lock=false
+      install --ignore-scripts &&
+      npm run build"
+
+volumes:
+  npm-cache:
+    name: npm-cache
+
